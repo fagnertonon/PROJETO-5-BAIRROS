@@ -5,12 +5,13 @@
 ## COMO UTILIZAR
 
     - Baixar ou clonar os arquivos;
-    - Executar o comando npm install;
-    - Executar o comando npm start
+    - Executar o comando *npm install*;
+    - Executar o comando *npm start*;
     - o programa irá rodar em localhost:3000;
+    - OBS: o serviceWorder só funciona em produção para testar primeiro executar o comando *npm run build*;
 
 ## VERSÃO
     Versão 1.0
 
 # AUTORES
-*    Fagner Carvalho Tonon [Linkedin](https://www.linkedin.com/in/fagner-tonon-699931149/)
+*    Fagner Carvalho Tonon [Linkedin](https://www.linkedin.com/in/fagner-tonon)

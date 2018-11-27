@@ -10,36 +10,42 @@ class App extends Component {
     super(props);
     this.state = {
       showSideBar: false,
-      'alllocations': places_data,
-      'map': '',
-      'infowindow': '',
-      'prevmarker': ''
+      alllocations: places_data,
+      map: '',
+      infowindow: '',
+      prevmarker: ''
     };
 
+    //captura a instância do objeto quando usada na função
     this.onSideBarToggle = this.onSideBarToggle.bind(this);
-
     this.initMap = this.initMap.bind(this);
     this.openInfoWindow = this.openInfoWindow.bind(this);
     this.closeInfoWindow = this.closeInfoWindow.bind(this);
   }
 
   componentDidMount() {
+    // Conecte a função initMap () dentro desta classe ao contexto da janela global,
+    // para que o Google Maps possa invocá-lo
     window.initMap = this.initMap;
+    // Carrega de forma assíncrona o script do Google Maps, passando a referência de retorno de chamada
     loadMapJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyBI-ESl0gKLZ3yYBLiTZ1CuQ0svL-NkNKE&callback=initMap')
   }
 
+  /**
+   * Inicialize o mapa quando o script do Google for carregado
+   */
   initMap() {
-    var self = this;
+    let self = this;
 
-    var mapview = document.getElementById('map');
+    let mapview = document.getElementById('map');
     mapview.style.height = window.innerHeight + "px";
-    var map = new window.google.maps.Map(mapview, {
+    let map = new window.google.maps.Map(mapview, {
       center: { lat: -20.3175257, lng: -40.3314534 },
       zoom: 12,
       mapTypeControl: false
     });
 
-    var InfoWindow = new window.google.maps.InfoWindow({});
+    let InfoWindow = new window.google.maps.InfoWindow({});
 
     window.google.maps.event.addListener(InfoWindow, 'closeclick', function () {
       self.closeInfoWindow();
@@ -51,7 +57,7 @@ class App extends Component {
     });
 
     window.google.maps.event.addDomListener(window, "resize", function () {
-      var center = map.getCenter();
+      let center = map.getCenter();
       window.google.maps.event.trigger(map, "resize");
       self.state.map.setCenter(center);
     });
@@ -60,11 +66,12 @@ class App extends Component {
       self.closeInfoWindow();
     });
 
-    var alllocations = [];
+    let alllocations = [];
 
     this.state.alllocations.forEach(function (location) {
-      var longname = location.name;
-      var marker = new window.google.maps.Marker({
+      let longname = location.name;
+
+      let marker = new window.google.maps.Marker({
         position: new window.google.maps.LatLng(location.position.lat, location.position.lng),
         animation: window.google.maps.Animation.DROP,
         map: map,
@@ -106,12 +113,35 @@ class App extends Component {
     this.getMarkerInfo(marker);
   }
 
+  //Carrega os dados junto com foursquare para visualizar infoWindow.
   getMarkerInfo(marker) {
     var self = this;
-    let title = `<h3>${marker.title}</h3>`
+    var clientId = "03HL4BOILJP2WN5H2141ALC5N2NBJHYGBDH0QHRMG2B50VOU";
+    var clientSecret = "LU3TBY1JI2RMZZDVBWXXQG42O05VO24MLKDL403QUGB2DYXJ";
+    var url = "https://api.foursquare.com/v2/venues/search?client_id=" + clientId + "&client_secret=" + clientSecret + "&v=20130815&ll=" + marker.getPosition().lat() + "," + marker.getPosition().lng() + "&limit=1";
+    fetch(url)
+        .then(
+            function (response) {
+                if (response.status !== 200) {
+                    self.state.infowindow.setContent("Sorry data can't be loaded");
+                    return;
+                }
 
-    self.state.infowindow.setContent(title);
-  }
+                response.json().then(function (data) {
+                    var location_data = data.response.venues[0];
+              
+                    var title = '<h2>Nome: </b>' + location_data.name + '</h3>';
+                    var endereco = '<h3>Endereço: ' + location_data.location.address + '</h3>';
+                    var link = '<a href="https://foursquare.com/v/'+ location_data.id +'" target="_blank">visite!</a>'
+                    self.state.infowindow.setContent(title + endereco + link);
+             
+                  });
+            }
+        )
+        .catch(function (err) {
+            self.state.infowindow.setContent("Sorry data can't be loaded");
+        });
+}
 
   closeInfoWindow() {
     if (this.state.prevmarker) {
@@ -135,8 +165,8 @@ class App extends Component {
             openInfoWindow={this.openInfoWindow}
             closeInfoWindow={this.closeInfoWindow} />
 
-          <div id="map"></div>
-          
+          <div rolele="application" id="map"></div>
+
         </section>
       </div>
 
@@ -147,8 +177,8 @@ class App extends Component {
 export default App;
 
 function loadMapJS(src) {
-  var ref = window.document.getElementsByTagName("script")[0];
-  var script = window.document.createElement("script");
+  let ref = window.document.getElementsByTagName("script")[0];
+  let script = window.document.createElement("script");
   script.src = src;
   script.async = true;
   script.onerror = function () {

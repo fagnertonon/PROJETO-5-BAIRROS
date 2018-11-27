@@ -13,11 +13,13 @@ export default class LocationList extends Component {
 
         this.filterLocations = this.filterLocations.bind(this);
     }
-
+    /**
+     * Filtra os locais
+     */
     filterLocations(event) {
         this.props.closeInfoWindow();
         const { value } = event.target;
-        var locations = [];
+        let locations = [];
         this.props.alllocations.forEach(function (location) {
             if (location.longname.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
                 location.marker.setVisible(true);
@@ -43,24 +45,26 @@ export default class LocationList extends Component {
     render() {
         const hide = this.props.show ? ' sidebar-show' : ' sidebar-hide';
 
-        var locationlist = this.state.locations.map(function (listItem, index) {
+        let locationlist = this.state.locations.map(function (listItem, index) {
             return (
                 <LocationItem key={index} openInfoWindow={this.props.openInfoWindow.bind(this)} data={listItem} />
             );
         }, this);
 
         return (
-            <nav className={'sidebar' + hide}>
+            <nav rolele='navigation' className={'sidebar' + hide}>
 
                 <form className="filter-container">
                     <input className="filter"
+                        role="search"
+                        aria-labelledby="filter"
+                        id="search-field"
                         type="text"
                         placeholder="Busca"
                         value={this.state.query}
                         onChange={this.filterLocations} />
                 </form>
-                
-                <ul className='places'>
+                <ul rolele='filter-list' className='places'>
                     {this.state.suggestions && locationlist}
                 </ul>
 
