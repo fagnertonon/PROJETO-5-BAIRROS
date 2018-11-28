@@ -134,7 +134,7 @@ class App extends Component {
 
             var title = '<h2>Nome: </b>' + location_data.name + '</h3>';
             var endereco = '<h3>Endereço: ' + location_data.location.address + '</h3>';
-            var link = '<a href="https://foursquare.com/v/' + location_data.id + '" target="_blank">visite!</a>'
+            var link = '<a href="https://foursquare.com/v/' + location_data.id + '" target="_blank">Leia mais no site do Foursquare</a>'
             self.state.infowindow.setContent(title + endereco + link);
 
           });
@@ -183,9 +183,7 @@ function loadMapJS(src) {
   let script = window.document.createElement("script");
   script.src = src;
   script.async = true;
-  script.onerror = function () {
-    document.write("Google Maps can't be loaded");
-  };
+ 
   ref.parentNode.insertBefore(script, ref);
 
   window.gm_authFailure = () => {

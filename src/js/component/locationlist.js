@@ -64,7 +64,7 @@ export default class LocationList extends Component {
                         value={this.state.query}
                         onChange={this.filterLocations} />
                 </form>
-                <ul role='filter-list' className='places'>
+                <ul className='places'>
                     {this.state.suggestions && locationlist}
                 </ul>
 
