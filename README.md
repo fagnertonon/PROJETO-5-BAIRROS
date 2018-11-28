@@ -15,3 +15,4 @@
 
 # AUTORES
 *    Fagner Carvalho Tonon [Linkedin](https://www.linkedin.com/in/fagner-tonon)
+*    Contribuição da [Foursquare](https://pt.foursquare.com/) com a api de pesquisa. 

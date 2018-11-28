@@ -113,35 +113,37 @@ class App extends Component {
     this.getMarkerInfo(marker);
   }
 
-  //Carrega os dados junto com foursquare para visualizar infoWindow.
+  /**
+   * Carrega os dados junto com foursquare para visualizar infoWindow.
+   */
   getMarkerInfo(marker) {
     var self = this;
     var clientId = "03HL4BOILJP2WN5H2141ALC5N2NBJHYGBDH0QHRMG2B50VOU";
     var clientSecret = "LU3TBY1JI2RMZZDVBWXXQG42O05VO24MLKDL403QUGB2DYXJ";
     var url = "https://api.foursquare.com/v2/venues/search?client_id=" + clientId + "&client_secret=" + clientSecret + "&v=20130815&ll=" + marker.getPosition().lat() + "," + marker.getPosition().lng() + "&limit=1";
     fetch(url)
-        .then(
-            function (response) {
-                if (response.status !== 200) {
-                    self.state.infowindow.setContent("Sorry data can't be loaded");
-                    return;
-                }
-
-                response.json().then(function (data) {
-                    var location_data = data.response.venues[0];
-              
-                    var title = '<h2>Nome: </b>' + location_data.name + '</h3>';
-                    var endereco = '<h3>Endereço: ' + location_data.location.address + '</h3>';
-                    var link = '<a href="https://foursquare.com/v/'+ location_data.id +'" target="_blank">visite!</a>'
-                    self.state.infowindow.setContent(title + endereco + link);
-             
-                  });
-            }
-        )
-        .catch(function (err) {
+      .then(
+        function (response) {
+          if (response.status !== 200) {
             self.state.infowindow.setContent("Sorry data can't be loaded");
-        });
-}
+            return;
+          }
+
+          response.json().then(function (data) {
+            var location_data = data.response.venues[0];
+
+            var title = '<h2>Nome: </b>' + location_data.name + '</h3>';
+            var endereco = '<h3>Endereço: ' + location_data.location.address + '</h3>';
+            var link = '<a href="https://foursquare.com/v/' + location_data.id + '" target="_blank">visite!</a>'
+            self.state.infowindow.setContent(title + endereco + link);
+
+          });
+        }
+      )
+      .catch(function (err) {
+        self.state.infowindow.setContent("Sorry data can't be loaded");
+      });
+  }
 
   closeInfoWindow() {
     if (this.state.prevmarker) {
@@ -165,7 +167,7 @@ class App extends Component {
             openInfoWindow={this.openInfoWindow}
             closeInfoWindow={this.closeInfoWindow} />
 
-          <div rolele="application" id="map"></div>
+          <div role="application" id="map"></div>
 
         </section>
       </div>
@@ -185,4 +187,10 @@ function loadMapJS(src) {
     document.write("Google Maps can't be loaded");
   };
   ref.parentNode.insertBefore(script, ref);
+
+  window.gm_authFailure = () => {
+    let mapview = document.getElementById('map');
+    mapview.innerHTML ='<p class="erro"><strong>Não foi possível carregar o Google Maps.<br> Por favor, recarregue a página.</strong></p>';
+  };
+
 }

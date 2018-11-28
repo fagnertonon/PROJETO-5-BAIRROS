@@ -47,24 +47,24 @@ export default class LocationList extends Component {
 
         let locationlist = this.state.locations.map(function (listItem, index) {
             return (
-                <LocationItem key={index} openInfoWindow={this.props.openInfoWindow.bind(this)} data={listItem} />
+                <LocationItem openInfoWindow={this.props.openInfoWindow.bind(this)} data={listItem} />
             );
         }, this);
 
         return (
-            <nav rolele='navigation' className={'sidebar' + hide}>
+            <nav role='navigation' className={'sidebar' + hide}>
 
                 <form className="filter-container">
                     <input className="filter"
                         role="search"
-                        aria-labelledby="filter"
+                        aria-label="filter"
                         id="search-field"
                         type="text"
                         placeholder="Busca"
                         value={this.state.query}
                         onChange={this.filterLocations} />
                 </form>
-                <ul rolele='filter-list' className='places'>
+                <ul role='filter-list' className='places'>
                     {this.state.suggestions && locationlist}
                 </ul>
 
